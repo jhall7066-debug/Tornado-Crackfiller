@@ -48,28 +48,91 @@ if (menuBtn && mobileNav) {
   }));
 }
 
-// ===== Product image thumbnails =====
+// ===== Product gallery: photos + product video =====
 document.querySelectorAll('[data-gallery]').forEach(g => {
   const main = g.querySelector('.main-img');
+  let vid = null;
+  const stopVideo = () => { if (vid) { vid.pause(); vid.remove(); vid = null; } main.hidden = false; };
   g.querySelectorAll('.thumbs button').forEach(b => {
     b.addEventListener('click', () => {
       g.querySelectorAll('.thumbs button').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
-      main.style.opacity = 0;
-      setTimeout(() => { main.src = b.dataset.src; main.style.opacity = 1; }, 150);
+      if (b.dataset.video) {
+        stopVideo();
+        vid = document.createElement('video');
+        vid.className = 'main-video';
+        vid.src = b.dataset.video;
+        vid.poster = b.dataset.poster;
+        vid.controls = true; vid.playsInline = true; vid.muted = true; vid.autoplay = true;
+        main.hidden = true;
+        main.after(vid);
+        vid.play().catch(() => {});
+      } else {
+        stopVideo();
+        main.style.opacity = 0;
+        setTimeout(() => { main.src = b.dataset.src; main.style.opacity = 1; }, 150);
+      }
     });
   });
 });
 
-// ===== "What are you fixing?" finder =====
+// ===== "What are you fixing?" finder + product demo videos =====
+const DEMOS = {
+  cracks: {
+    video: 'assets/video-tornado.mp4', poster: 'assets/video-tornado-poster.jpg',
+    eyebrow: 'For single cracks', title: 'Tornado Crackfiller',
+    text: 'Watch it pour straight from the jug into real driveway cracks and level off flush with the asphalt.',
+    points: ['Ready to pour, no mixing', 'Matte finish that blends in', '1-gallon jug or 5-gallon bucket']
+  },
+  gator: {
+    video: 'assets/video-gator.mp4', poster: 'assets/video-gator-poster.jpg',
+    eyebrow: 'For alligator cracking', title: 'Gator-Nado Crackfiller',
+    text: 'See the sand-reinforced formula spread across a webbed, broken-up section and lock it back together.',
+    points: ['Sand built into the formula', 'Spread with a squeegee or trowel', 'Covers whole damaged areas']
+  },
+  concrete: {
+    video: 'assets/video-mix.mp4', poster: 'assets/video-mix-poster.jpg',
+    eyebrow: 'For damaged concrete', title: 'Mix Master Concrete Repair',
+    text: 'Watch the two-part mortar get mixed and troweled into a cracked concrete slab.',
+    points: ['Strong adhesion to concrete', 'Feather edge up to 1", or 4" extended', 'Small, medium and large kits']
+  }
+};
 const tabs = document.querySelectorAll('.finder-tab');
 const cards = document.querySelectorAll('.product-card');
+const panel = document.getElementById('demo-panel');
+const demoVideo = document.getElementById('demo-video');
+function closeDemo() { demoVideo.pause(); panel.hidden = true; }
+function openDemo(key) {
+  const d = DEMOS[key];
+  if (!d) { closeDemo(); return; }
+  document.getElementById('demo-eyebrow').textContent = d.eyebrow;
+  document.getElementById('demo-title').textContent = d.title;
+  document.getElementById('demo-text').textContent = d.text;
+  document.getElementById('demo-points').innerHTML = d.points.map(p => '<li>' + p + '</li>').join('');
+  if (!demoVideo.src.endsWith(d.video)) { demoVideo.src = d.video; demoVideo.poster = d.poster; }
+  panel.hidden = false;
+  demoVideo.currentTime = 0;
+  demoVideo.play().catch(() => {});
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 tabs.forEach(t => t.addEventListener('click', () => {
   tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
   t.classList.add('active'); t.setAttribute('aria-selected', 'true');
   const f = t.dataset.filter;
   cards.forEach(c => c.classList.toggle('dim', f !== 'all' && c.dataset.cat !== f));
+  openDemo(f);
 }));
+document.getElementById('demo-close').addEventListener('click', () => {
+  closeDemo();
+  tabs.forEach(x => { const all = x.dataset.filter === 'all'; x.classList.toggle('active', all); x.setAttribute('aria-selected', all); });
+  cards.forEach(c => c.classList.remove('dim'));
+});
+document.getElementById('demo-shop').addEventListener('click', e => {
+  e.preventDefault();
+  const first = document.querySelector('.product-card:not(.dim)');
+  (first || document.getElementById('product-grid')).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  demoVideo.pause();
+});
 
 // ===== Before / after slider =====
 document.querySelectorAll('.ba-slider').forEach(s => {

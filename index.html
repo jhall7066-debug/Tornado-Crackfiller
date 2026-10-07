@@ -139,16 +139,16 @@
     <!-- Which product finder -->
     <div class="finder" role="tablist" aria-label="What are you fixing?">
       <button class="finder-tab" role="tab" aria-selected="false" data-filter="cracks">
-        <img src="assets/crack-single.jpg" alt="A single long crack running through asphalt" loading="lazy">
-        <span><strong>Single cracks</strong><small>Lines and seams in asphalt</small></span>
+        <span class="tab-media"><img src="assets/crack-single.jpg" alt="A single long crack running through asphalt" loading="lazy"><span class="play-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+        <span><strong>Single cracks</strong><small>Lines and seams in asphalt</small><em class="watch">▶ Watch demo</em></span>
       </button>
       <button class="finder-tab" role="tab" aria-selected="false" data-filter="gator">
-        <img src="assets/crack-alligator.jpg" alt="Alligator cracking: a web of connected cracks in asphalt" loading="lazy">
-        <span><strong>Alligator cracking</strong><small>Webbed, broken-up areas</small></span>
+        <span class="tab-media"><img src="assets/crack-alligator.jpg" alt="Alligator cracking: a web of connected cracks in asphalt" loading="lazy"><span class="play-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+        <span><strong>Alligator cracking</strong><small>Webbed, broken-up areas</small><em class="watch">▶ Watch demo</em></span>
       </button>
       <button class="finder-tab" role="tab" aria-selected="false" data-filter="concrete">
-        <img src="assets/mixmaster-contents.jpg" alt="Mix Master two-part concrete repair kit" loading="lazy">
-        <span><strong>Damaged concrete</strong><small>Patching and resurfacing</small></span>
+        <span class="tab-media"><img src="assets/mixmaster-contents.jpg" alt="Mix Master two-part concrete repair kit" loading="lazy"><span class="play-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+        <span><strong>Damaged concrete</strong><small>Patching and resurfacing</small><em class="watch">▶ Watch demo</em></span>
       </button>
       <button class="finder-tab active" role="tab" aria-selected="true" data-filter="all">
         <span class="all-icon" aria-hidden="true">
@@ -156,6 +156,25 @@
         </span>
         <span><strong>Show everything</strong><small>All 4 products</small></span>
       </button>
+    </div>
+
+
+    <!-- Product demo panel: opens when a finder tab is clicked -->
+    <div class="demo-panel" id="demo-panel" hidden>
+      <div class="demo-video">
+        <video id="demo-video" controls playsinline muted preload="none"></video>
+      </div>
+      <div class="demo-info">
+        <p class="eyebrow dark" id="demo-eyebrow"></p>
+        <h3 id="demo-title"></h3>
+        <p id="demo-text"></p>
+        <ul class="ticks" id="demo-points"></ul>
+        <div class="demo-actions">
+          <a href="#product-grid" class="btn btn-primary" id="demo-shop">Shop This Product</a>
+          <button type="button" class="btn btn-outline" id="demo-close">Close video</button>
+        </div>
+        <p class="demo-note">Video starts muted. Tap the speaker icon for sound.</p>
+      </div>
     </div>
 
     <div class="product-grid" id="product-grid">
@@ -169,6 +188,7 @@
             <button class="active" data-src="assets/product-1gal.jpg" aria-label="Show jug"><img src="assets/product-1gal.jpg" alt=""></button>
             <button data-src="assets/product-1gal-nozzle.jpg" aria-label="Show precision nozzle"><img src="assets/product-1gal-nozzle.jpg" alt=""></button>
             <button data-src="assets/product-1gal-label.jpg" aria-label="Show label"><img src="assets/product-1gal-label.jpg" alt=""></button>
+            <button class="video-thumb" data-video="assets/video-tornado.mp4" data-poster="assets/video-tornado-poster.jpg" aria-label="Play Tornado Crackfiller video"><img src="assets/video-tornado-poster.jpg" alt=""><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
         </div>
         <div class="product-body">
@@ -200,6 +220,7 @@
             <button class="active" data-src="assets/product-5gal.jpg" aria-label="Show bucket"><img src="assets/product-5gal.jpg" alt=""></button>
             <button data-src="assets/product-5gal-garage.jpg" aria-label="Show bucket in garage"><img src="assets/product-5gal-garage.jpg" alt=""></button>
             <button data-src="assets/product-5gal-label.jpg" aria-label="Show label"><img src="assets/product-5gal-label.jpg" alt=""></button>
+            <button class="video-thumb" data-video="assets/video-tornado.mp4" data-poster="assets/video-tornado-poster.jpg" aria-label="Play Tornado Crackfiller video"><img src="assets/video-tornado-poster.jpg" alt=""><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
         </div>
         <div class="product-body">
@@ -231,6 +252,7 @@
             <button class="active" data-src="assets/product-gatornado.jpg" aria-label="Show bucket"><img src="assets/product-gatornado.jpg" alt=""></button>
             <button data-src="assets/gatornado-before-after.jpg" aria-label="Show before and after"><img src="assets/gatornado-before-after.jpg" alt=""></button>
             <button data-src="assets/product-gatornado-label.jpg" aria-label="Show label"><img src="assets/product-gatornado-label.jpg" alt=""></button>
+            <button class="video-thumb" data-video="assets/video-gator.mp4" data-poster="assets/video-gator-poster.jpg" aria-label="Play Gator-Nado video"><img src="assets/video-gator-poster.jpg" alt=""><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
         </div>
         <div class="product-body">
@@ -261,6 +283,7 @@
           <div class="thumbs">
             <button class="active" data-src="assets/product-mixmaster.jpg" aria-label="Show bucket"><img src="assets/product-mixmaster.jpg" alt=""></button>
             <button data-src="assets/mixmaster-contents.jpg" aria-label="Show kit contents"><img src="assets/mixmaster-contents.jpg" alt=""></button>
+            <button class="video-thumb" data-video="assets/video-mix.mp4" data-poster="assets/video-mix-poster.jpg" aria-label="Play Mix Master video"><img src="assets/video-mix-poster.jpg" alt=""><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
         </div>
         <div class="product-body">
