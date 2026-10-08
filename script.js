@@ -48,6 +48,34 @@ if (menuBtn && mobileNav) {
   }));
 }
 
+// ===== Video loader: plays the file directly, falls back to a blob copy if the host can't stream it =====
+const blobCache = {};
+function loadVideo(video, src, poster) {
+  video.poster = poster;
+  video.dataset.src = src;
+  video.classList.remove('video-failed');
+  video.onerror = async () => {
+    if (video.dataset.src !== src || video.dataset.fallback === src) return;
+    video.dataset.fallback = src;
+    try {
+      if (!blobCache[src]) {
+        const res = await fetch(src);
+        if (!res.ok) throw new Error(res.status);
+        blobCache[src] = URL.createObjectURL(new Blob([await res.arrayBuffer()], { type: 'video/mp4' }));
+      }
+      if (video.dataset.src !== src) return;
+      video.src = blobCache[src];
+      video.play().catch(() => {});
+    } catch (e) {
+      video.classList.add('video-failed');
+      console.warn('Video could not load:', src, e);
+    }
+  };
+  video.src = blobCache[src] || src;
+  video.load();
+  video.play().catch(() => {});
+}
+
 // ===== Product gallery: photos + product video =====
 document.querySelectorAll('[data-gallery]').forEach(g => {
   const main = g.querySelector('.main-img');
@@ -61,12 +89,11 @@ document.querySelectorAll('[data-gallery]').forEach(g => {
         stopVideo();
         vid = document.createElement('video');
         vid.className = 'main-video';
-        vid.src = b.dataset.video;
-        vid.poster = b.dataset.poster;
-        vid.controls = true; vid.playsInline = true; vid.muted = true; vid.autoplay = true;
+        vid.controls = true; vid.playsInline = true; vid.muted = true;
+        vid.setAttribute('playsinline', ''); vid.setAttribute('muted', '');
         main.hidden = true;
         main.after(vid);
-        vid.play().catch(() => {});
+        loadVideo(vid, b.dataset.video, b.dataset.poster);
       } else {
         stopVideo();
         main.style.opacity = 0;
@@ -109,10 +136,13 @@ function openDemo(key) {
   document.getElementById('demo-title').textContent = d.title;
   document.getElementById('demo-text').textContent = d.text;
   document.getElementById('demo-points').innerHTML = d.points.map(p => '<li>' + p + '</li>').join('');
-  if (!demoVideo.src.endsWith(d.video)) { demoVideo.src = d.video; demoVideo.poster = d.poster; }
   panel.hidden = false;
-  demoVideo.currentTime = 0;
-  demoVideo.play().catch(() => {});
+  if (demoVideo.dataset.src !== d.video) {
+    loadVideo(demoVideo, d.video, d.poster);
+  } else {
+    demoVideo.currentTime = 0;
+    demoVideo.play().catch(() => {});
+  }
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 tabs.forEach(t => t.addEventListener('click', () => {
