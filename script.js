@@ -48,32 +48,43 @@ if (menuBtn && mobileNav) {
   }));
 }
 
-// ===== Video loader: plays the file directly, falls back to a blob copy if the host can't stream it =====
-const blobCache = {};
+// ===== Video loader =====
+// Each video has a local copy (assets/) and a backup copy hosted on the client's Shopify store.
+// If the local file is missing or won't play, the backup is used automatically.
+const SHOPIFY_VIDEO = 'https://cdn.shopify.com/videos/c/vp/';
+const SHOPIFY_POSTER = 'https://cdn.shopify.com/s/files/1/0969/1748/7902/files/preview_images/';
+const VIDEO_BACKUPS = {
+  'assets/video-tornado.mp4': { id: '015c2a9b730d40c2ae55c21b761686cc', v: '93824980' },
+  'assets/video-gator.mp4':   { id: 'f074229df8a34b56b4361a95027b4755', v: '93824981' },
+  'assets/video-mix.mp4':     { id: '83ae9a4d4f794f48a378e43c00b5ab76', v: '95227918' }
+};
+function videoSources(src, poster) {
+  const list = [{ src: src, poster: poster }];
+  const b = VIDEO_BACKUPS[src];
+  if (b) list.push({
+    src: SHOPIFY_VIDEO + b.id + '/' + b.id + '.HD-720p-4.5Mbps-' + b.v + '.mp4',
+    poster: SHOPIFY_POSTER + b.id + '.thumbnail.0000000000_600x.jpg'
+  });
+  return list;
+}
 function loadVideo(video, src, poster) {
-  video.poster = poster;
+  const list = videoSources(src, poster);
+  let i = 0;
+  const token = String(Math.random());
+  video.dataset.token = token;
   video.dataset.src = src;
   video.classList.remove('video-failed');
-  video.onerror = async () => {
-    if (video.dataset.src !== src || video.dataset.fallback === src) return;
-    video.dataset.fallback = src;
-    try {
-      if (!blobCache[src]) {
-        const res = await fetch(src);
-        if (!res.ok) throw new Error(res.status);
-        blobCache[src] = URL.createObjectURL(new Blob([await res.arrayBuffer()], { type: 'video/mp4' }));
-      }
-      if (video.dataset.src !== src) return;
-      video.src = blobCache[src];
-      video.play().catch(() => {});
-    } catch (e) {
-      video.classList.add('video-failed');
-      console.warn('Video could not load:', src, e);
-    }
+  const tryNext = () => {
+    if (video.dataset.token !== token) return;
+    if (i >= list.length) { video.classList.add('video-failed'); return; }
+    const s = list[i++];
+    video.poster = s.poster;
+    video.src = s.src;
+    video.load();
+    video.play().catch(() => {});
   };
-  video.src = blobCache[src] || src;
-  video.load();
-  video.play().catch(() => {});
+  video.onerror = () => { console.warn('Video source failed, trying backup:', video.currentSrc || video.src); tryNext(); };
+  tryNext();
 }
 
 // ===== Product gallery: photos + product video =====
