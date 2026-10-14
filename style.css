@@ -434,3 +434,74 @@ video.video-failed { background: #000 url("assets/hero.jpg") center/cover; }
   .sds-quick div { border-color: #999; background: none; }
   .sds-section { break-inside: avoid-page; }
 }
+
+/* ===== Shop categories: Asphalt / Concrete ===== */
+.cat-shop { display: grid; grid-template-columns: 3fr 1.06fr; gap: 1.2rem; align-items: stretch; }
+.cat-group { background: var(--paper-2); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; border: 2px solid var(--asphalt); }
+.cat-group .product-grid { padding: 1rem; flex: 1; }
+.cat-asphalt .product-grid { grid-template-columns: repeat(3, 1fr); }
+.cat-concrete .product-grid { grid-template-columns: 1fr; }
+.cat-head { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.2rem; position: relative; }
+.cat-asphalt .cat-head { background-color: var(--asphalt); color: #fff;
+  background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.4px), radial-gradient(rgba(255,255,255,.04) 1px, transparent 1.4px);
+  background-size: 7px 7px, 11px 11px; background-position: 0 0, 3px 5px; }
+.cat-concrete { border-color: #8f9089; }
+.cat-concrete .cat-head { background-color: #d6d5d0; color: var(--asphalt);
+  background-image: radial-gradient(rgba(0,0,0,.09) 1px, transparent 1.4px), radial-gradient(rgba(255,255,255,.5) 1px, transparent 1.6px);
+  background-size: 6px 6px, 9px 9px; background-position: 0 0, 2px 4px; }
+.cat-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--orange); }
+.cat-concrete .cat-head::after { background: repeating-linear-gradient(-45deg, var(--yellow) 0 10px, var(--asphalt) 10px 20px); }
+.cat-icon { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--orange); }
+.cat-concrete .cat-icon { background: var(--asphalt); }
+.cat-icon svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.cat-text { min-width: 0; flex: 1; }
+.cat-kicker { margin: 0; font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--orange); }
+.cat-concrete .cat-kicker { color: var(--orange-dark); }
+.cat-title { margin: 0; font-family: 'Anton', Impact, sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.05; letter-spacing: .02em; text-transform: uppercase; }
+.cat-sub { margin: .15rem 0 0; font-size: .85rem; font-weight: 600; opacity: .8; }
+.cat-count { flex: none; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: .45em .8em; border-radius: 999px; border: 1.5px solid currentColor; opacity: .85; }
+.finder-tab small b { font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: .15em .5em; border-radius: 4px; margin-right: .3em; vertical-align: 1px; }
+.tag-asphalt { background: var(--asphalt); color: #fff; }
+.tag-concrete { background: #d6d5d0; color: var(--asphalt); }
+@media (min-width: 1081px) {
+  .cat-concrete .cat-count { display: none; }
+  .cat-concrete .cat-head { padding-inline: 1rem; gap: .75rem; }
+}
+@media (max-width: 1080px) {
+  .cat-shop { grid-template-columns: 1fr; }
+  .cat-asphalt .product-grid, .cat-concrete .product-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .cat-group .product-grid { grid-template-columns: 1fr !important; padding: .75rem; }
+  .cat-head { padding: .85rem 1rem; gap: .7rem; }
+  .cat-icon { width: 40px; height: 40px; }
+  .cat-count { display: none !important; }
+}
+
+/* ===== Hero deal starburst: Buy 2, Get 1 Free ===== */
+.hero-deal { position: absolute; right: 2%; top: 44%; width: clamp(230px, 24vw, 320px); aspect-ratio: 1; transform: translateY(-50%) rotate(-8deg); display: grid; place-items: center; text-decoration: none; color: #fff; z-index: 2; filter: drop-shadow(0 18px 30px rgba(0,0,0,.55)); animation: deal-pop .7s cubic-bezier(.2,1.6,.4,1) .4s both; }
+.deal-burst { position: absolute; inset: 0; width: 100%; height: 100%; animation: deal-spin 40s linear infinite; }
+.deal-burst polygon { fill: #e21b23; }
+.deal-burst circle { fill: none; stroke: rgba(255,255,255,.85); stroke-width: 2; stroke-dasharray: 5 5; }
+.deal-text { position: relative; display: flex; flex-direction: column; align-items: center; font-family: 'Anton', Impact, sans-serif; text-transform: uppercase; line-height: .9; font-size: clamp(230px, 24vw, 320px); }
+.deal-buy { font-size: .15em; letter-spacing: .03em; color: #fff; }
+.deal-get { display: flex; align-items: center; gap: .03em; color: var(--yellow); margin-top: .02em; }
+.deal-stack { display: flex; flex-direction: column; align-items: flex-end; font-size: .15em; line-height: .95; }
+.deal-one { font-size: .36em; line-height: .8; }
+.deal-on { font-family: 'Inter', sans-serif; font-weight: 800; font-size: .046em; letter-spacing: .08em; margin-top: .4em; color: #fff; }
+.deal-cta { position: absolute; bottom: -6%; left: 50%; transform: translateX(-50%) rotate(8deg); white-space: nowrap; background: var(--yellow); color: var(--asphalt); font-weight: 800; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; padding: .55em 1em; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,.35); transition: background .15s; }
+.hero-deal:hover .deal-cta { background: #fff; }
+.hero-deal:hover { filter: drop-shadow(0 22px 36px rgba(0,0,0,.6)) brightness(1.05); }
+.hero-deal:focus-visible { outline: 3px solid var(--yellow); outline-offset: 6px; border-radius: 50%; }
+@keyframes deal-pop { from { opacity: 0; transform: translateY(-50%) rotate(-30deg) scale(.4); } to { opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1); } }
+@keyframes deal-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .hero-deal, .deal-burst { animation: none; } }
+@media (max-width: 1080px) {
+  .hero-deal { width: 210px; right: 0; }
+  .deal-text { font-size: 210px; }
+}
+@media (max-width: 900px) {
+  .hero-deal { position: relative; top: auto; right: auto; width: 180px; margin: 2rem 0 .5rem auto; transform: rotate(-8deg); animation: none; }
+  .deal-text { font-size: 180px; }
+  .deal-cta { font-size: .7rem; }
+}
