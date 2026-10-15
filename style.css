@@ -479,11 +479,11 @@ video.video-failed { background: #000 url("assets/hero.jpg") center/cover; }
 }
 
 /* ===== Hero deal starburst: Buy 2, Get 1 Free ===== */
-.hero-deal { position: absolute; right: 2%; top: 44%; width: clamp(230px, 24vw, 320px); aspect-ratio: 1; transform: translateY(-50%) rotate(-8deg); display: grid; place-items: center; text-decoration: none; color: #fff; z-index: 2; filter: drop-shadow(0 18px 30px rgba(0,0,0,.55)); animation: deal-pop .7s cubic-bezier(.2,1.6,.4,1) .4s both; }
+.hero-deal { position: absolute; right: 0; top: 2rem; width: clamp(230px, 24vw, 300px); aspect-ratio: 1; transform: rotate(-8deg); display: grid; place-items: center; text-decoration: none; color: #fff; z-index: 2; filter: drop-shadow(0 18px 30px rgba(0,0,0,.55)); animation: deal-pop .7s cubic-bezier(.2,1.6,.4,1) .4s both; }
 .deal-burst { position: absolute; inset: 0; width: 100%; height: 100%; animation: deal-spin 40s linear infinite; }
 .deal-burst polygon { fill: #e21b23; }
 .deal-burst circle { fill: none; stroke: rgba(255,255,255,.85); stroke-width: 2; stroke-dasharray: 5 5; }
-.deal-text { position: relative; display: flex; flex-direction: column; align-items: center; font-family: 'Anton', Impact, sans-serif; text-transform: uppercase; line-height: .9; font-size: clamp(230px, 24vw, 320px); }
+.deal-text { position: relative; display: flex; flex-direction: column; align-items: center; font-family: 'Anton', Impact, sans-serif; text-transform: uppercase; line-height: .9; font-size: clamp(230px, 24vw, 300px); }
 .deal-buy { font-size: .15em; letter-spacing: .03em; color: #fff; }
 .deal-get { display: flex; align-items: center; gap: .03em; color: var(--yellow); margin-top: .02em; }
 .deal-stack { display: flex; flex-direction: column; align-items: flex-end; font-size: .15em; line-height: .95; }
@@ -493,7 +493,7 @@ video.video-failed { background: #000 url("assets/hero.jpg") center/cover; }
 .hero-deal:hover .deal-cta { background: #fff; }
 .hero-deal:hover { filter: drop-shadow(0 22px 36px rgba(0,0,0,.6)) brightness(1.05); }
 .hero-deal:focus-visible { outline: 3px solid var(--yellow); outline-offset: 6px; border-radius: 50%; }
-@keyframes deal-pop { from { opacity: 0; transform: translateY(-50%) rotate(-30deg) scale(.4); } to { opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1); } }
+@keyframes deal-pop { from { opacity: 0; transform: rotate(-30deg) scale(.4); } to { opacity: 1; transform: rotate(-8deg) scale(1); } }
 @keyframes deal-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .hero-deal, .deal-burst { animation: none; } }
 @media (max-width: 1080px) {
@@ -501,9 +501,19 @@ video.video-failed { background: #000 url("assets/hero.jpg") center/cover; }
   .deal-text { font-size: 210px; }
 }
 @media (max-width: 900px) {
-  .hero-deal { position: relative; top: auto; right: auto; width: 180px; margin: 2rem 0 .5rem auto; transform: rotate(-8deg); animation: none; }
-  .deal-text { font-size: 180px; }
-  .deal-cta { font-size: .7rem; }
+  /* Badge sits top-right of the hero, beside the eyebrow, so it shows without scrolling */
+  .hero-content { padding-top: 1.5rem; }
+  .hero-deal { top: 1.5rem; right: 0; width: 160px; }
+  .deal-text { font-size: 160px; }
+  .deal-cta { font-size: .62rem; padding: .45em .8em; }
+  .hero .eyebrow { min-height: 180px; display: flex; align-items: flex-end; padding-right: 175px; margin-bottom: 1rem; }
+}
+@media (max-width: 640px) {
+  .hero-deal { top: 1.25rem; width: 124px; }
+  .deal-text { font-size: 124px; }
+  .deal-cta { display: none; }
+  .hero-content { padding-top: 1.25rem; }
+  .hero .eyebrow { min-height: 128px; padding-right: 136px; }
 }
 
 /* ===== Surface chooser: Asphalt OR Concrete ===== */
