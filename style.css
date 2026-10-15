@@ -502,18 +502,18 @@ video.video-failed { background: #000 url("assets/hero.jpg") center/cover; }
 }
 @media (max-width: 900px) {
   /* Badge sits top-right of the hero, beside the eyebrow, so it shows without scrolling */
-  .hero-content { padding-top: 1.5rem; }
-  .hero-deal { top: 1.5rem; right: 0; width: 160px; }
+  .hero-content { padding-top: 2.5rem; }
+  .hero-deal { top: 1.9rem; right: 0; width: 160px; }
   .deal-text { font-size: 160px; }
   .deal-cta { font-size: .62rem; padding: .45em .8em; }
-  .hero .eyebrow { min-height: 180px; display: flex; align-items: flex-end; padding-right: 175px; margin-bottom: 1rem; }
+  .hero .eyebrow { padding-right: 175px; }
 }
 @media (max-width: 640px) {
-  .hero-deal { top: 1.25rem; width: 124px; }
-  .deal-text { font-size: 124px; }
+  .hero-deal { top: 1.6rem; width: 118px; }
+  .deal-text { font-size: 118px; }
   .deal-cta { display: none; }
-  .hero-content { padding-top: 1.25rem; }
-  .hero .eyebrow { min-height: 128px; padding-right: 136px; }
+  .hero-content { padding-top: 2.25rem; }
+  .hero .eyebrow { padding-right: 132px; }
 }
 
 /* ===== Surface chooser: Asphalt OR Concrete ===== */
