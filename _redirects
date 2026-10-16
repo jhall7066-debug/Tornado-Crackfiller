@@ -4,6 +4,10 @@
 /pages/terms-conditions        /terms           301
 /pages/data-sharing-opt-out    /privacy         301
 /pages/*                       /                301
+/products/tornado-crack-filler-acrylic-pavement-crack-sealant-1-gallon                   /tornado-crackfiller-1-gallon   301
+/products/tornado-crack-filler-professional-acrylic-pavement-crack-sealant-5-gallon-bucket /tornado-crackfiller-5-gallon   301
+/products/gator-nado-crack-filler-5-gallon-bucket                                        /gator-nado-crackfiller         301
+/products/mix-master-concrete-repair-mortar                                              /mix-master-concrete-repair     301
 /products/*                    /#shop           301
 /collections/*                 /#shop           301
 /blogs/*                       /                301

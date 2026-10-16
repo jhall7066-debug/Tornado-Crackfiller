@@ -135,6 +135,7 @@ const DEMOS = {
     points: ['Strong adhesion to concrete', 'Feather edge up to 1", or 4" extended', 'Small, medium and large kits']
   }
 };
+if (document.getElementById('demo-panel')) {
 const tabs = document.querySelectorAll('.finder-tab');
 const cards = document.querySelectorAll('.product-card');
 const panel = document.getElementById('demo-panel');
@@ -174,6 +175,7 @@ document.getElementById('demo-shop').addEventListener('click', e => {
   (first || document.getElementById('product-grid')).scrollIntoView({ behavior: 'smooth', block: 'center' });
   demoVideo.pause();
 });
+}
 
 // ===== Before / after slider =====
 document.querySelectorAll('.ba-slider').forEach(s => {
@@ -201,4 +203,4 @@ if ('IntersectionObserver' in window) {
   els.forEach(el => { el.classList.add('reveal'); io.observe(el); });
 }
 
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearEl = document.getElementById('year'); if (yearEl) yearEl.textContent = new Date().getFullYear();
