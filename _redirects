@@ -1,9 +1,20 @@
 # Old Shopify addresses -> sections of the new site (301 = moved permanently, keeps Google ranking)
 /pages/how-to                  /#how-it-works   301
 /pages/contact                 /#contractors    301
-/pages/terms-conditions        /terms.html      301
-/pages/data-sharing-opt-out    /privacy.html    301
+/pages/terms-conditions        /terms           301
+/pages/data-sharing-opt-out    /privacy         301
 /pages/*                       /                301
 /products/*                    /#shop           301
 /collections/*                 /#shop           301
 /blogs/*                       /                301
+
+# Old Shopify policy, cart and account links
+/policies/privacy-policy       /privacy                                                         301
+/policies/terms-of-service     /terms                                                           301
+/policies/refund-policy        https://tornadocrackfiller.myshopify.com/policies/refund-policy   301
+/policies/shipping-policy      https://tornadocrackfiller.myshopify.com/policies/shipping-policy 301
+/policies/*                    https://tornadocrackfiller.myshopify.com/policies/:splat          301
+/cart                          https://tornadocrackfiller.myshopify.com/cart                     301
+/cart/*                        https://tornadocrackfiller.myshopify.com/cart/:splat              301
+/account                       https://tornadocrackfiller.myshopify.com/account                  301
+/account/*                     https://tornadocrackfiller.myshopify.com/account/:splat           301
