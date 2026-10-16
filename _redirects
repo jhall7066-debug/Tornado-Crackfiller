@@ -1,0 +1,9 @@
+# Old Shopify addresses -> sections of the new site (301 = moved permanently, keeps Google ranking)
+/pages/how-to                  /#how-it-works   301
+/pages/contact                 /#contractors    301
+/pages/terms-conditions        /terms.html      301
+/pages/data-sharing-opt-out    /privacy.html    301
+/pages/*                       /                301
+/products/*                    /#shop           301
+/collections/*                 /#shop           301
+/blogs/*                       /                301
