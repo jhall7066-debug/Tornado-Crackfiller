@@ -120,24 +120,27 @@ const DEMOS = {
     video: 'assets/video-tornado.mp4', poster: 'assets/video-tornado-poster.jpg',
     eyebrow: 'For single cracks', title: 'Tornado Crackfiller',
     text: 'Watch it pour straight from the jug into real driveway cracks and level off flush with the asphalt.',
+    shop: 'asphalt.html#single-cracks',
     points: ['Ready to pour, no mixing', 'Matte finish that blends in', '1-gallon jug or 5-gallon bucket']
   },
   gator: {
     video: 'assets/video-gator.mp4', poster: 'assets/video-gator-poster.jpg',
     eyebrow: 'For alligator cracking', title: 'Gator-Nado Crackfiller',
     text: 'See the sand-reinforced formula spread across a webbed, broken-up section and lock it back together.',
+    shop: 'asphalt.html#alligator-cracking',
     points: ['Sand built into the formula', 'Spread with a squeegee or trowel', 'Covers whole damaged areas']
   },
   concrete: {
     video: 'assets/video-mix.mp4', poster: 'assets/video-mix-poster.jpg',
     eyebrow: 'For damaged concrete', title: 'Mix Master Concrete Repair',
     text: 'Watch the two-part mortar get mixed and troweled into a cracked concrete slab.',
+    shop: 'concrete.html',
     points: ['Strong adhesion to concrete', 'Feather edge up to 1", or 4" extended', 'Small, medium and large kits']
   }
 };
 if (document.getElementById('demo-panel')) {
-const tabs = document.querySelectorAll('.finder-tab');
-const cards = document.querySelectorAll('.product-card');
+const tabs = document.querySelectorAll('button.finder-tab');
+const cards = document.querySelectorAll('.cat-shop .product-card');
 const panel = document.getElementById('demo-panel');
 const demoVideo = document.getElementById('demo-video');
 function closeDemo() { demoVideo.pause(); panel.hidden = true; }
@@ -148,6 +151,11 @@ function openDemo(key) {
   document.getElementById('demo-title').textContent = d.title;
   document.getElementById('demo-text').textContent = d.text;
   document.getElementById('demo-points').innerHTML = d.points.map(p => '<li>' + p + '</li>').join('');
+  // "Shop This Product": jump within the page when the product is here, otherwise go to its category page
+  let shopHref = d.shop || '#product-grid';
+  const hash = shopHref.split('#')[1];
+  if (hash && document.getElementById(hash)) shopHref = '#' + hash;
+  document.getElementById('demo-shop').setAttribute('href', shopHref);
   panel.hidden = false;
   if (demoVideo.dataset.src !== d.video) {
     loadVideo(demoVideo, d.video, d.poster);
@@ -170,10 +178,12 @@ document.getElementById('demo-close').addEventListener('click', () => {
   cards.forEach(c => c.classList.remove('dim'));
 });
 document.getElementById('demo-shop').addEventListener('click', e => {
-  e.preventDefault();
-  const first = document.querySelector('.product-card:not(.dim)');
-  (first || document.getElementById('product-grid')).scrollIntoView({ behavior: 'smooth', block: 'center' });
   demoVideo.pause();
+  const href = e.currentTarget.getAttribute('href') || '';
+  if (href.charAt(0) !== '#') return; // another page: follow the link
+  e.preventDefault();
+  const first = document.querySelector('.cat-shop .product-card:not(.dim)');
+  (first || document.getElementById(href.slice(1)) || document.getElementById('product-grid')).scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 }
 
@@ -204,3 +214,22 @@ if ('IntersectionObserver' in window) {
 }
 
 const yearEl = document.getElementById('year'); if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+// ===== Hero deal badge: flips between the asphalt (red) and Mix Master (blue) deals =====
+document.querySelectorAll('[data-deal-flip]').forEach(deal => {
+  const faces = deal.querySelectorAll('.deal-face');
+  if (faces.length < 2) return;
+  let current = 0, paused = false;
+  const show = n => {
+    current = n;
+    deal.classList.toggle('flipped', n === 1);
+    faces.forEach((f, k) => { f.setAttribute('aria-hidden', k === n ? 'false' : 'true'); f.tabIndex = k === n ? 0 : -1; });
+  };
+  show(0);
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  deal.addEventListener('mouseenter', () => { paused = true; });
+  deal.addEventListener('mouseleave', () => { paused = false; });
+  deal.addEventListener('focusin', () => { paused = true; });
+  deal.addEventListener('focusout', () => { paused = false; });
+  setInterval(() => { if (!paused && !document.hidden) show(1 - current); }, 4000);
+});

@@ -10,33 +10,38 @@
 <link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="legal-page">
 
 <!-- PROMO BAR -->
 <div class="promo-bar">
-  <span><strong>Buy 2, Get 1 FREE</strong> on 1-gallon jugs</span>
+  <a class="hide-sm" href="asphalt.html#single-cracks"><strong>Buy 2, Get 1 FREE</strong> on 1-gallon jugs</a>
+  <span class="dot" aria-hidden="true"></span>
+  <a class="hide-sm promo-blue" href="concrete.html"><strong>Buy 2, Get 1 FREE</strong> on Mix Master</a>
   <span class="dot" aria-hidden="true"></span>
   <span class="hide-sm">Leveling tool included with every order</span>
+  <a class="show-sm" href="shop.html"><strong>Buy 2, Get 1 FREE</strong> on 1-gal jugs &amp; Mix Master</a>
 </div>
 
 <!-- HEADER -->
 <header class="site-header" id="top">
   <div class="container header-inner">
     <a href="index.html" class="logo" aria-label="Tornado Crackfiller home">
-      <img src="assets/logo-trim.png" alt="Tornado Crackfiller" width="278" height="131">
+      <img src="assets/logo-trim.webp" alt="Tornado Crackfiller" width="278" height="131">
     </a>
     <nav class="main-nav" aria-label="Main">
-      <a href="index.html#shop">Shop</a>
+      <a href="asphalt.html">Asphalt</a>
+      <a href="concrete.html">Concrete</a>
+      <a href="shop.html">Shop All</a>
       <a href="index.html#how-it-works">How It Works</a>
-      <a href="index.html#compare">Compare</a>
       <a href="index.html#faq">FAQ</a>
       <a href="index.html#contractors">Contractors</a>
     </nav>
     <div class="header-actions">
-      <a href="index.html#shop" class="btn btn-primary btn-sm hide-sm">Shop Now</a>
+      <a href="shop.html" class="btn btn-primary btn-sm hide-sm">Shop Now</a>
       <a class="cart-btn" href="https://tornadocrackfiller.myshopify.com/cart" aria-label="View cart">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
       </a>
@@ -46,9 +51,10 @@
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
-    <a href="index.html#shop">Shop</a>
+    <a href="asphalt.html">Asphalt</a>
+    <a href="concrete.html">Concrete</a>
+    <a href="shop.html">Shop All</a>
     <a href="index.html#how-it-works">How It Works</a>
-    <a href="index.html#compare">Compare</a>
     <a href="index.html#faq">FAQ</a>
     <a href="index.html#contractors">Contractors &amp; Contact</a>
   </nav>
@@ -184,11 +190,14 @@
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <img src="assets/logo-trim.png" alt="Tornado Crackfiller" class="footer-logo" width="200">
-      <p>Pro-strength, ready-to-pour asphalt crack filler.</p>
+      <img src="assets/logo-trim.webp" alt="Tornado Crackfiller" class="footer-logo" width="200" height="94" loading="lazy">
+      <p>Asphalt crack filler and concrete repair from Pave-Tech LLC, Williamsburg, Ohio.</p>
     </div>
     <div>
       <h4>Shop</h4>
+      <a href="asphalt.html">Asphalt Repair</a>
+      <a href="concrete.html">Concrete Repair</a>
+      <a href="shop.html">Shop All</a>
       <a href="tornado-crackfiller-1-gallon.html">Tornado Crackfiller 1 Gal</a>
       <a href="tornado-crackfiller-5-gallon.html">Tornado Crackfiller 5 Gal</a>
       <a href="gator-nado-crackfiller.html">Gator-Nado</a>

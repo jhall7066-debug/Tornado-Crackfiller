@@ -24,7 +24,8 @@
 <link rel="apple-touch-icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 <link rel="stylesheet" href="style.css">
 
 <!-- Shopify Storefront Web Components: live product data, cart and checkout from the existing Shopify store -->
@@ -58,21 +59,25 @@
 
 <!-- PROMO BAR -->
 <div class="promo-bar">
-  <span><strong>Buy 2, Get 1 FREE</strong> on 1-gallon jugs</span>
+  <a class="hide-sm" href="asphalt.html#single-cracks"><strong>Buy 2, Get 1 FREE</strong> on 1-gallon jugs</a>
+  <span class="dot" aria-hidden="true"></span>
+  <a class="hide-sm promo-blue" href="concrete.html"><strong>Buy 2, Get 1 FREE</strong> on Mix Master</a>
   <span class="dot" aria-hidden="true"></span>
   <span class="hide-sm">Leveling tool included with every order</span>
+  <a class="show-sm" href="shop.html"><strong>Buy 2, Get 1 FREE</strong> on 1-gal jugs &amp; Mix Master</a>
 </div>
 
 <!-- HEADER -->
 <header class="site-header" id="top">
   <div class="container header-inner">
     <a href="#top" class="logo" aria-label="Tornado Crackfiller home">
-      <img src="assets/logo-trim.png" alt="Tornado Crackfiller" width="278" height="131">
+      <img src="assets/logo-trim.webp" alt="Tornado Crackfiller" width="278" height="131">
     </a>
     <nav class="main-nav" aria-label="Main">
-      <a href="#shop">Shop</a>
+      <a href="asphalt.html">Asphalt</a>
+      <a href="concrete.html">Concrete</a>
+      <a href="shop.html">Shop All</a>
       <a href="#how-it-works">How It Works</a>
-      <a href="#compare">Compare</a>
       <a href="#faq">FAQ</a>
       <a href="#contractors">Contractors</a>
     </nav>
@@ -87,9 +92,10 @@
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile">
-    <a href="#shop">Shop</a>
+    <a href="asphalt.html">Asphalt</a>
+    <a href="concrete.html">Concrete</a>
+    <a href="shop.html">Shop All</a>
     <a href="#how-it-works">How It Works</a>
-    <a href="#compare">Compare</a>
     <a href="#faq">FAQ</a>
     <a href="#contractors">Contractors &amp; Contact</a>
   </nav>
@@ -116,15 +122,26 @@
       <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Leveling tool included</li>
       <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Starting at $69.99</li>
     </ul>
-    <a href="#shop" class="hero-deal" aria-label="Buy 2, get 1 free on 1-gallon jugs. Shop the deal.">
-      <svg class="deal-burst" viewBox="0 0 200 200" aria-hidden="true"><polygon points="100.0,2.0 112.2,14.9 127.6,6.0 135.7,21.8 153.0,17.6 156.3,35.0 174.1,35.8 172.3,53.5 189.1,59.3 182.5,75.8 197.0,86.1 186.0,100.0 197.0,113.9 182.5,124.2 189.1,140.7 172.3,146.5 174.1,164.2 156.3,165.0 153.0,182.4 135.7,178.2 127.6,194.0 112.2,185.1 100.0,198.0 87.8,185.1 72.4,194.0 64.3,178.2 47.0,182.4 43.7,165.0 25.9,164.2 27.7,146.5 10.9,140.7 17.5,124.2 3.0,113.9 14.0,100.0 3.0,86.1 17.5,75.8 10.9,59.3 27.7,53.5 25.9,35.8 43.7,35.0 47.0,17.6 64.3,21.8 72.4,6.0 87.8,14.9"/><circle cx="100" cy="100" r="76"/></svg>
-      <span class="deal-text" aria-hidden="true">
-        <span class="deal-buy">Buy 2</span>
-        <span class="deal-get"><span class="deal-stack"><span>Get</span><span>Free</span></span><span class="deal-one">1</span></span>
-        <span class="deal-on">on 1-gallon jugs</span>
-      </span>
-      <span class="deal-cta" aria-hidden="true">Shop the deal →</span>
-    </a>
+    <div class="hero-deal" data-deal-flip>
+      <a class="deal-face deal-face-asphalt" href="asphalt.html#single-cracks" aria-label="Buy 2, get 1 free on 1-gallon jugs. Shop the asphalt deal.">
+        <svg class="deal-burst" viewBox="0 0 200 200" aria-hidden="true"><polygon points="100.0,2.0 112.2,14.9 127.6,6.0 135.7,21.8 153.0,17.6 156.3,35.0 174.1,35.8 172.3,53.5 189.1,59.3 182.5,75.8 197.0,86.1 186.0,100.0 197.0,113.9 182.5,124.2 189.1,140.7 172.3,146.5 174.1,164.2 156.3,165.0 153.0,182.4 135.7,178.2 127.6,194.0 112.2,185.1 100.0,198.0 87.8,185.1 72.4,194.0 64.3,178.2 47.0,182.4 43.7,165.0 25.9,164.2 27.7,146.5 10.9,140.7 17.5,124.2 3.0,113.9 14.0,100.0 3.0,86.1 17.5,75.8 10.9,59.3 27.7,53.5 25.9,35.8 43.7,35.0 47.0,17.6 64.3,21.8 72.4,6.0 87.8,14.9"/><circle cx="100" cy="100" r="76"/></svg>
+        <span class="deal-text" aria-hidden="true">
+          <span class="deal-buy">Buy 2</span>
+          <span class="deal-get"><span class="deal-stack"><span>Get</span><span>Free</span></span><span class="deal-one">1</span></span>
+          <span class="deal-on">on 1-gallon jugs</span>
+        </span>
+        <span class="deal-cta" aria-hidden="true">Shop the deal →</span>
+      </a>
+      <a class="deal-face deal-face-concrete" href="concrete.html" aria-label="Buy 2, get 1 free on Mix Master concrete repair. Shop the concrete deal.">
+        <svg class="deal-burst" viewBox="0 0 200 200" aria-hidden="true"><polygon points="100.0,2.0 112.2,14.9 127.6,6.0 135.7,21.8 153.0,17.6 156.3,35.0 174.1,35.8 172.3,53.5 189.1,59.3 182.5,75.8 197.0,86.1 186.0,100.0 197.0,113.9 182.5,124.2 189.1,140.7 172.3,146.5 174.1,164.2 156.3,165.0 153.0,182.4 135.7,178.2 127.6,194.0 112.2,185.1 100.0,198.0 87.8,185.1 72.4,194.0 64.3,178.2 47.0,182.4 43.7,165.0 25.9,164.2 27.7,146.5 10.9,140.7 17.5,124.2 3.0,113.9 14.0,100.0 3.0,86.1 17.5,75.8 10.9,59.3 27.7,53.5 25.9,35.8 43.7,35.0 47.0,17.6 64.3,21.8 72.4,6.0 87.8,14.9"/><circle cx="100" cy="100" r="76"/></svg>
+        <span class="deal-text" aria-hidden="true">
+          <span class="deal-buy">Buy 2</span>
+          <span class="deal-get"><span class="deal-stack"><span>Get</span><span>Free</span></span><span class="deal-one">1</span></span>
+          <span class="deal-on">on Mix Master</span>
+        </span>
+        <span class="deal-cta" aria-hidden="true">Shop concrete →</span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -154,16 +171,18 @@
       <h2>Pick the right fix for your pavement</h2>
       <p class="lead">First, what are you repairing?</p>
       <div class="surface-pick">
-        <a class="surface-opt surface-asphalt" href="#asphalt">
+        <a class="surface-opt surface-asphalt" href="asphalt.html">
           <span class="cat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20 9 4M20 20 15 4M12 6v2M12 11v2M12 16v2"/></svg></span>
           <span><span class="surface-name">Asphalt</span><span class="surface-meta">Driveways &amp; lots · 3 products</span></span>
-          <span class="surface-go" aria-hidden="true">↓</span>
+          <span class="surface-deal">Buy 2 Get 1</span>
+          <span class="surface-go" aria-hidden="true">→</span>
         </a>
         <span class="surface-or" aria-hidden="true">OR</span>
-        <a class="surface-opt surface-concrete" href="#concrete">
+        <a class="surface-opt surface-concrete" href="concrete.html">
           <span class="cat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 12h18M12 4v8M8 12v8M16 12v8"/></svg></span>
           <span><span class="surface-name">Concrete</span><span class="surface-meta">Slabs &amp; steps · 1 product</span></span>
-          <span class="surface-go" aria-hidden="true">↓</span>
+          <span class="surface-deal surface-deal-blue">Buy 2 Get 1</span>
+          <span class="surface-go" aria-hidden="true">→</span>
         </a>
       </div>
     </div>
@@ -182,12 +201,12 @@
         <span class="tab-media"><img width="700" height="1050" src="assets/mixmaster-contents.jpg" alt="Mix Master two-part concrete repair kit" loading="lazy"><span class="play-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
         <span><strong>Damaged concrete</strong><small><b class="tag-concrete">Concrete</b> Patching and resurfacing</small><em class="watch">▶ Watch demo</em></span>
       </button>
-      <button class="finder-tab active" role="tab" aria-selected="true" data-filter="all">
+      <a class="finder-tab finder-all" href="shop.html">
         <span class="all-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         </span>
-        <span><strong>Show everything</strong><small>All 4 products</small></span>
-      </button>
+        <span><strong>Show everything</strong><small>All 4 products</small><em class="watch">Shop all →</em></span>
+      </a>
     </div>
 
 
@@ -209,30 +228,28 @@
       </div>
     </div>
 
-    <div class="cat-shop" id="product-grid">
-
-     <section class="cat-group cat-asphalt" id="asphalt" aria-labelledby="cat-asphalt-title">
-      <header class="cat-head">
-        <span class="cat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20 9 4M20 20 15 4M12 6v2M12 11v2M12 16v2"/></svg></span>
-        <div class="cat-text">
-          <p class="cat-kicker">Category 01</p>
-          <h3 class="cat-title" id="cat-asphalt-title">Asphalt Repair</h3>
-          <p class="cat-sub">Driveways, parking lots &amp; blacktop</p>
+    <!-- Featured best seller (full catalog lives on asphalt.html, concrete.html and shop.html) -->
+    <div class="home-pick" id="product-grid">
+      <div class="home-pick-copy">
+        <p class="eyebrow dark">Best seller</p>
+        <h3 class="home-pick-title">Fixing driveway cracks? Start here.</h3>
+        <p>Tornado Crackfiller pours straight from the jug into single cracks and seams, levels flush and dries to a matte finish. A leveling tool comes with every order.</p>
+        <div class="home-pick-links">
+          <a class="home-pick-link link-asphalt" href="asphalt.html"><strong>All asphalt products</strong><span>Tornado 1 &amp; 5 gal, Gator-Nado</span><b aria-hidden="true">→</b></a>
+          <a class="home-pick-link link-concrete" href="concrete.html"><strong>Concrete repair</strong><span>Mix Master · Buy 2, Get 1 Free</span><b aria-hidden="true">→</b></a>
         </div>
-        <span class="cat-count">3 products</span>
-      </header>
-      <div class="product-grid">
-
+        <a class="home-pick-all" href="shop.html">Or shop all 4 products →</a>
+      </div>
       <!-- 1 GALLON -->
       <article class="product-card" data-cat="cracks">
         <div class="badge-row"><span class="badge badge-hot">Buy 2, Get 1 Free</span><span class="badge">Best for DIY</span></div>
         <div class="product-media" data-gallery>
           <img width="600" height="600" src="assets/product-1gal.jpg" alt="Tornado Crackfiller 1-gallon jug" class="main-img" loading="lazy">
           <div class="thumbs">
-            <button class="active" data-src="assets/product-1gal.jpg" aria-label="Show jug"><img loading="lazy" width="600" height="600" src="assets/product-1gal.jpg" alt="Tornado Crackfiller 1-gallon jug"></button>
-            <button data-src="assets/product-1gal-nozzle.jpg" aria-label="Show precision nozzle"><img loading="lazy" width="600" height="600" src="assets/product-1gal-nozzle.jpg" alt="Precision pour nozzle on the 1-gallon jug"></button>
-            <button data-src="assets/product-1gal-label.jpg" aria-label="Show label"><img loading="lazy" width="600" height="600" src="assets/product-1gal-label.jpg" alt="Tornado Crackfiller 1-gallon label and directions"></button>
-            <button class="video-thumb" data-video="assets/video-tornado.mp4" data-poster="assets/video-tornado-poster.jpg" aria-label="Play Tornado Crackfiller video"><img loading="lazy" width="576" height="720" src="assets/video-tornado-poster.jpg" alt="Tornado Crackfiller video thumbnail" onerror="this.onerror=null;this.src='https://cdn.shopify.com/s/files/1/0969/1748/7902/files/preview_images/015c2a9b730d40c2ae55c21b761686cc.thumbnail.0000000000_600x.jpg'"><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+            <button class="active" data-src="assets/product-1gal.jpg" aria-label="Show jug"><img loading="lazy" width="160" height="160" src="assets/thumbs/product-1gal.jpg" alt="Tornado Crackfiller 1-gallon jug"></button>
+            <button data-src="assets/product-1gal-nozzle.jpg" aria-label="Show precision nozzle"><img loading="lazy" width="160" height="160" src="assets/thumbs/product-1gal-nozzle.jpg" alt="Precision pour nozzle on the 1-gallon jug"></button>
+            <button data-src="assets/product-1gal-label.jpg" aria-label="Show label"><img loading="lazy" width="160" height="160" src="assets/thumbs/product-1gal-label.jpg" alt="Tornado Crackfiller 1-gallon label and directions"></button>
+            <button class="video-thumb" data-video="assets/video-tornado.mp4" data-poster="assets/video-tornado-poster.jpg" aria-label="Play Tornado Crackfiller video"><img loading="lazy" width="160" height="200" src="assets/thumbs/video-tornado-poster.jpg" alt="Tornado Crackfiller video thumbnail" onerror="this.onerror=null;this.src='https://cdn.shopify.com/s/files/1/0969/1748/7902/files/preview_images/015c2a9b730d40c2ae55c21b761686cc.thumbnail.0000000000_600x.jpg'"><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
         </div>
         <div class="product-body">
@@ -255,122 +272,6 @@
           </div>
         </div>
       </article>
-
-      <!-- 5 GALLON -->
-      <article class="product-card featured" data-cat="cracks">
-        <div class="badge-row"><span class="badge badge-hot">Best Value</span><span class="badge">Contractor size</span></div>
-        <div class="product-media" data-gallery>
-          <img width="600" height="600" src="assets/product-5gal.jpg" alt="Tornado Crackfiller 5-gallon bucket" class="main-img" loading="lazy">
-          <div class="thumbs">
-            <button class="active" data-src="assets/product-5gal.jpg" aria-label="Show bucket"><img loading="lazy" width="600" height="600" src="assets/product-5gal.jpg" alt="Tornado Crackfiller 5-gallon bucket"></button>
-            <button data-src="assets/product-5gal-garage.jpg" aria-label="Show bucket in garage"><img loading="lazy" width="600" height="600" src="assets/product-5gal-garage.jpg" alt="Tornado Crackfiller 5-gallon bucket in a garage"></button>
-            <button data-src="assets/product-5gal-label.jpg" aria-label="Show label"><img loading="lazy" width="600" height="600" src="assets/product-5gal-label.jpg" alt="Tornado Crackfiller 5-gallon label and directions"></button>
-            <button class="video-thumb" data-video="assets/video-tornado.mp4" data-poster="assets/video-tornado-poster.jpg" aria-label="Play Tornado Crackfiller video"><img loading="lazy" width="576" height="720" src="assets/video-tornado-poster.jpg" alt="Tornado Crackfiller video thumbnail" onerror="this.onerror=null;this.src='https://cdn.shopify.com/s/files/1/0969/1748/7902/files/preview_images/015c2a9b730d40c2ae55c21b761686cc.thumbnail.0000000000_600x.jpg'"><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-          </div>
-        </div>
-        <div class="product-body">
-          <p class="size">5 Gallon Bucket</p>
-          <h3><a href="tornado-crackfiller-5-gallon.html">Tornado Crackfiller Pro</a></h3>
-          <div class="price"><span class="now">$159.99</span><s>$250.00</s><span class="save">Save $90</span></div>
-          <ul class="ticks">
-            <li>Big driveways, parking pads and lots</li>
-            <li>Same rubberized, matte-finish formula</li>
-            <li>Leveling tool included</li>
-          </ul>
-          <a class="details-link" href="tornado-crackfiller-5-gallon.html">Product details &amp; specs →</a>
-          <div class="buy">
-            <shopify-context type="product" handle="tornado-crack-filler-professional-acrylic-pavement-crack-sealant-5-gallon-bucket">
-              <template>
-                <button class="btn btn-primary btn-block" onclick="addToCart(event)">Add to Cart · <shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money></button>
-              </template>
-            </shopify-context>
-            <a class="btn btn-primary btn-block fallback-buy" data-handle="tornado-crack-filler-professional-acrylic-pavement-crack-sealant-5-gallon-bucket" href="https://tornadocrackfiller.myshopify.com/products/tornado-crack-filler-professional-acrylic-pavement-crack-sealant-5-gallon-bucket">Add to Cart — $159.99</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- GATOR-NADO -->
-      <article class="product-card" data-cat="gator">
-        <div class="badge-row"><span class="badge badge-gator">Alligator cracks</span><span class="badge">Trowel grade</span></div>
-        <div class="product-media" data-gallery>
-          <img width="600" height="600" src="assets/product-gatornado.jpg" alt="Gator-Nado Crackfiller 4.75-gallon bucket" class="main-img" loading="lazy">
-          <div class="thumbs">
-            <button class="active" data-src="assets/product-gatornado.jpg" aria-label="Show bucket"><img loading="lazy" width="600" height="600" src="assets/product-gatornado.jpg" alt="Gator-Nado Crackfiller 4.75-gallon bucket"></button>
-            <button data-src="assets/gatornado-before-after.jpg" aria-label="Show before and after"><img loading="lazy" width="600" height="600" src="assets/gatornado-before-after.jpg" alt="Alligator cracking before and after Gator-Nado"></button>
-            <button data-src="assets/product-gatornado-label.jpg" aria-label="Show label"><img loading="lazy" width="600" height="600" src="assets/product-gatornado-label.jpg" alt="Gator-Nado Crackfiller label and directions"></button>
-            <button class="video-thumb" data-video="assets/video-gator.mp4" data-poster="assets/video-gator-poster.jpg" aria-label="Play Gator-Nado video"><img loading="lazy" width="576" height="720" src="assets/video-gator-poster.jpg" alt="Gator-Nado Crackfiller video thumbnail" onerror="this.onerror=null;this.src='https://cdn.shopify.com/s/files/1/0969/1748/7902/files/preview_images/f074229df8a34b56b4361a95027b4755.thumbnail.0000000000_600x.jpg'"><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-          </div>
-        </div>
-        <div class="product-body">
-          <p class="size">4.75 Gallon Bucket</p>
-          <h3><a href="gator-nado-crackfiller.html">Gator-Nado Crackfiller</a></h3>
-          <div class="price"><span class="now">$259.00</span></div>
-          <ul class="ticks">
-            <li>Sand built into the formula</li>
-            <li>Locks broken, webbed sections in place</li>
-            <li>Apply with a squeegee or trowel</li>
-          </ul>
-          <a class="details-link" href="gator-nado-crackfiller.html">Product details &amp; specs →</a>
-          <div class="buy">
-            <shopify-context type="product" handle="gator-nado-crack-filler-5-gallon-bucket">
-              <template>
-                <button class="btn btn-primary btn-block" onclick="addToCart(event)">Add to Cart · <shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money></button>
-              </template>
-            </shopify-context>
-            <a class="btn btn-primary btn-block fallback-buy" data-handle="gator-nado-crack-filler-5-gallon-bucket" href="https://tornadocrackfiller.myshopify.com/products/gator-nado-crack-filler-5-gallon-bucket">Add to Cart — $259.00</a>
-          </div>
-        </div>
-      </article>
-      </div>
-     </section>
-
-     <section class="cat-group cat-concrete" id="concrete" aria-labelledby="cat-concrete-title">
-      <header class="cat-head">
-        <span class="cat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 12h18M12 4v8M8 12v8M16 12v8"/></svg></span>
-        <div class="cat-text">
-          <p class="cat-kicker">Category 02</p>
-          <h3 class="cat-title" id="cat-concrete-title">Concrete Repair</h3>
-          <p class="cat-sub">Slabs, steps &amp; walkways</p>
-        </div>
-        <span class="cat-count">1 product</span>
-      </header>
-      <div class="product-grid">
-
-      <!-- MIX MASTER -->
-      <article class="product-card" data-cat="concrete">
-        <div class="badge-row"><span class="badge badge-new">New</span><span class="badge">For concrete</span></div>
-        <div class="product-media" data-gallery>
-          <img width="800" height="800" src="assets/product-mixmaster.jpg" alt="Mix Master concrete repair mortar bucket" class="main-img" loading="lazy">
-          <div class="thumbs">
-            <button class="active" data-src="assets/product-mixmaster.jpg" aria-label="Show bucket"><img loading="lazy" width="800" height="800" src="assets/product-mixmaster.jpg" alt="Mix Master concrete repair mortar bucket"></button>
-            <button data-src="assets/mixmaster-contents.jpg" aria-label="Show kit contents"><img loading="lazy" width="700" height="1050" src="assets/mixmaster-contents.jpg" alt="Mix Master two-part concrete repair kit contents"></button>
-            <button class="video-thumb" data-video="assets/video-mix.mp4" data-poster="assets/video-mix-poster.jpg" aria-label="Play Mix Master video"><img loading="lazy" width="576" height="720" src="assets/video-mix-poster.jpg" alt="Mix Master concrete repair video thumbnail" onerror="this.onerror=null;this.src='https://cdn.shopify.com/s/files/1/0969/1748/7902/files/preview_images/83ae9a4d4f794f48a378e43c00b5ab76.thumbnail.0000000000_600x.jpg'"><span class="mini-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-          </div>
-        </div>
-        <div class="product-body">
-          <p class="size">Small · Medium · Large</p>
-          <h3><a href="mix-master-concrete-repair.html">Mix Master Concrete Repair</a></h3>
-          <div class="price"><span class="now">From $89.95</span><s>$120.00</s></div>
-          <ul class="ticks">
-            <li>Two-part, polymer-modified mortar</li>
-            <li>Feather edge to 1", up to 4" extended</li>
-            <li>Up to 5,000 PSI after 28 days</li>
-          </ul>
-          <a class="details-link" href="mix-master-concrete-repair.html">Product details &amp; specs →</a>
-          <div class="buy">
-            <shopify-context type="product" handle="mix-master-concrete-repair-mortar">
-              <template>
-                <shopify-variant-selector></shopify-variant-selector>
-                <button class="btn btn-primary btn-block" onclick="addToCart(event)">Add to Cart · <shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money></button>
-              </template>
-            </shopify-context>
-            <a class="btn btn-primary btn-block fallback-buy" data-handle="mix-master-concrete-repair-mortar" href="https://tornadocrackfiller.myshopify.com/products/mix-master-concrete-repair-mortar">Choose Size</a>
-          </div>
-        </div>
-      </article>
-      </div>
-     </section>
-
     </div>
 
     <p class="shop-note">Secure checkout powered by Shopify. Need a bigger order? <a href="#contractors">Ask about contractor pricing</a>.</p>
@@ -455,7 +356,7 @@
     <div class="table-wrap">
       <table class="compare-table">
         <thead>
-          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col" class="us"><img loading="lazy" src="assets/logo-trim.png" alt="Tornado Crackfiller" width="120" height="57"></th><th scope="col">Typical fillers</th></tr>
+          <tr><th scope="col"><span class="sr-only">Feature</span></th><th scope="col" class="us"><img loading="lazy" src="assets/logo-trim.webp" alt="Tornado Crackfiller" width="120" height="57"></th><th scope="col">Typical fillers</th></tr>
         </thead>
         <tbody>
           <tr><th scope="row">Self-leveling</th><td class="us"><span class="yes">✓</span></td><td><span class="no">✕</span></td></tr>
@@ -609,11 +510,14 @@
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <img loading="lazy" src="assets/logo-trim.png" alt="Tornado Crackfiller" class="footer-logo" width="200" height="94">
-      <p>Pro-strength, ready-to-pour asphalt crack filler.</p>
+      <img loading="lazy" src="assets/logo-trim.webp" alt="Tornado Crackfiller" class="footer-logo" width="200" height="94">
+      <p>Asphalt crack filler and concrete repair from Pave-Tech LLC, Williamsburg, Ohio.</p>
     </div>
     <div>
       <h4>Shop</h4>
+      <a href="asphalt.html">Asphalt Repair</a>
+      <a href="concrete.html">Concrete Repair</a>
+      <a href="shop.html">Shop All</a>
       <a href="tornado-crackfiller-1-gallon.html">Tornado Crackfiller 1 Gal</a>
       <a href="tornado-crackfiller-5-gallon.html">Tornado Crackfiller 5 Gal</a>
       <a href="gator-nado-crackfiller.html">Gator-Nado</a>
