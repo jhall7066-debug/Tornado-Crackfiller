@@ -635,10 +635,12 @@ a.finder-tab { text-decoration: none; }
 .cat-hero-concrete .eyebrow { color: var(--orange-dark); }
 .cat-hero h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); margin: 0 0 .15em; }
 .cat-hero-sub { margin: 0; max-width: 620px; font-size: 1.08rem; opacity: .85; }
-.cat-hero-switch { flex: none; display: flex; flex-direction: column; gap: .2rem; text-decoration: none; padding: .9rem 1.1rem; border-radius: 12px; border: 2px solid currentColor; font-size: .85rem; font-weight: 600; opacity: .9; transition: background .15s, opacity .15s; }
-.cat-hero-switch span { font-family: var(--display); font-size: 1.25rem; text-transform: uppercase; letter-spacing: .02em; }
-.cat-hero-switch:hover { opacity: 1; background: rgba(255,255,255,.08); }
-.cat-hero-concrete .cat-hero-switch:hover { background: rgba(0,0,0,.06); }
+.cat-hero-switch { flex: none; display: flex; flex-direction: column; gap: .2rem; text-decoration: none; padding: .95rem 1.25rem; border-radius: 12px; border: 2px solid var(--yellow); color: #fff; background: rgba(255,199,44,.08); font-size: .85rem; font-weight: 600; box-shadow: 0 0 0 4px rgba(255,199,44,.12); transition: background .15s, color .15s, transform .15s, box-shadow .15s; }
+.cat-hero-switch span { font-family: var(--display); font-size: 1.25rem; text-transform: uppercase; letter-spacing: .02em; color: var(--yellow); transition: color .15s; }
+.cat-hero-switch:hover, .cat-hero-switch:focus-visible { background: var(--yellow); color: var(--asphalt); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(255,199,44,.3); }
+.cat-hero-switch:hover span, .cat-hero-switch:focus-visible span { color: var(--asphalt); }
+.cat-hero-concrete .cat-hero-switch { background: var(--asphalt); border-color: var(--asphalt); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+.cat-hero-concrete .cat-hero-switch:hover, .cat-hero-concrete .cat-hero-switch:focus-visible { background: var(--yellow); border-color: var(--asphalt); color: var(--asphalt); }
 
 .finder.finder-2 { grid-template-columns: repeat(2, 1fr); max-width: 760px; margin-inline: auto; }
 .cat-shop.cat-shop-asphalt { grid-template-columns: 2fr 1.06fr; }
