@@ -712,6 +712,9 @@ a.finder-tab { text-decoration: none; }
 .hero-deal.flipped .deal-face-asphalt { transform: perspective(900px) rotateY(-180deg); pointer-events: none; }
 .hero-deal.flipped .deal-face-concrete { transform: perspective(900px) rotateY(0deg); pointer-events: auto; }
 .deal-face-concrete .deal-burst polygon, .cat-deal .deal-burst polygon { fill: var(--deal-blue); }
+/* "on Small Mix Master" is longer than the asphalt line, so shrink it slightly to stay inside the dashed ring */
+.deal-face-concrete .deal-on { font-size: .04em; letter-spacing: .06em; }
+@media (min-width: 761px) { .cat-deal .cd-on { font-size: .52rem; letter-spacing: .06em; } }
 
 /* Concrete page hero badge */
 .cat-deal { position: relative; flex: none; width: 150px; aspect-ratio: 1; display: grid; place-items: center; text-decoration: none; color: #fff; transform: rotate(-8deg); filter: drop-shadow(0 10px 18px rgba(0,0,0,.3)); transition: transform .15s; }
@@ -739,3 +742,10 @@ a.finder-tab { text-decoration: none; }
   .cd-on { margin: 0; font-size: .75rem; }
 }
 @media (prefers-reduced-motion: reduce) { .hero-deal .deal-face { transition: none; } }
+
+/* Brand mascot logos in place of the road icon (tornado = Tornado/asphalt, gator = Gator-Nado) */
+.cat-icon.cat-icon-logo { overflow: hidden; background: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.9); }
+.cat-icon.cat-icon-logo img { width: 100%; height: 100%; display: block; }
+.cat-icon.cat-icon-tornado img { object-fit: contain; padding: 3%; }
+.cat-icon.cat-icon-gator { background: #1a1a1a; }
+.cat-icon.cat-icon-gator img { object-fit: cover; }
