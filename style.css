@@ -751,3 +751,8 @@ a.finder-tab { text-decoration: none; }
 .cat-icon.cat-icon-tornado img { object-fit: contain; padding: 3%; }
 .cat-icon.cat-icon-gator { background: #1a1a1a; }
 .cat-icon.cat-icon-gator img { object-fit: cover; }
+
+/* Buy 2, Get 1 Free note inside the cart */
+.bogo-note { margin: 12px 0 0; padding: 10px 14px; border-radius: 12px; background: #fff4e8; border: 1px solid var(--orange); font-family: var(--body); font-size: 14px; font-weight: 600; color: var(--ink); text-align: center; }
+.bogo-note p { margin: 0; }
+.bogo-note p + p { margin-top: 6px; }

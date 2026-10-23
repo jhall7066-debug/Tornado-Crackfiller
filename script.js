@@ -233,3 +233,116 @@ document.querySelectorAll('[data-deal-flip]').forEach(deal => {
   deal.addEventListener('focusout', () => { paused = false; });
   setInterval(() => { if (!paused && !document.hidden) show(1 - current); }, 4000);
 });
+
+// ===== Buy 2, Get 1 Free: auto-add the free item =====
+// When a customer has 2 of an eligible item in the cart, a 3rd is added automatically.
+// The Shopify discount (in Shopify admin → Discounts) is what makes that 3rd item $0,
+// so only turn a product ON here once its Shopify discount is active.
+const BOGO_DEALS = [
+  {
+    name: 'Tornado Crackfiller 1 Gallon',
+    on: true,  // Shopify discount: "TCF Buy 2 Get 1 Free" (active)
+    handle: 'tornado-crack-filler-acrylic-pavement-crack-sealant-1-gallon',
+    size: null, // single size, any variant counts
+    note: 'Free jug added: Buy 2, Get 1 Free. It comes off at checkout.'
+  },
+  {
+    name: 'Mix Master Small',
+    on: true,  // needs the Mix Master Buy 2 Get 1 discount active in Shopify
+    handle: 'mix-master-concrete-repair-mortar',
+    size: /small/i, // only the Small size qualifies
+    note: 'Free Small Mix Master added: Buy 2, Get 1 Free. It comes off at checkout.'
+  }
+];
+// false = one free item per order. true = repeats (buy 4 get 2, buy 6 get 3...).
+// Only set true if the Shopify discount also allows more than one use per order.
+const BOGO_REPEAT = false;
+
+(function () {
+  if (!window.customElements) return;
+  const STORE_KEY = 'tcf-bogo-prev';
+  const read = () => { try { return JSON.parse(sessionStorage.getItem(STORE_KEY)) || null; } catch (e) { return null; } };
+  const write = v => { try { sessionStorage.setItem(STORE_KEY, JSON.stringify(v)); } catch (e) {} };
+
+  const dealFor = line => {
+    const m = line && line.merchandise;
+    if (!m || !m.product) return null;
+    return BOGO_DEALS.find(d => d.on && m.product.handle === d.handle &&
+      (!d.size || d.size.test(m.title || '') || (m.selectedOptions || []).some(o => d.size.test(o.value)))) || null;
+  };
+
+  // Is a free item "due" at this total? A full set of 2 paid with no free one yet.
+  const wantsFree = total => BOGO_REPEAT ? total % 3 === 2 : total === 2;
+
+  customElements.whenDefined('shopify-cart').then(() => {
+    const cart = document.getElementById('cart');
+    if (!cart || !cart.addCartAction) return;
+    let prev = read();      // { variantId: totalQty } from the last settled cart
+    let busy = false, timer = null, latest = null, notes = {};
+
+    const noteEl = document.createElement('div');
+    noteEl.slot = 'extension';
+    noteEl.className = 'bogo-note';
+    noteEl.hidden = true;
+    cart.appendChild(noteEl);
+    const showNotes = () => {
+      const msgs = Object.values(notes);
+      noteEl.hidden = !msgs.length;
+      noteEl.innerHTML = msgs.map(m => '<p>' + m + '</p>').join('');
+    };
+
+    const settle = () => {
+      const c = latest;
+      if (!c || !c.lines || busy) return;
+      const lines = c.lines.nodes || [];
+      if (lines.some(l => String(l.id).indexOf('__h_pending_') === 0)) return; // still saving
+      // Shopify can show one cart line as two rows (paid + discounted) with the same line id,
+      // so add quantities up per line id first.
+      const totals = {}, byVariant = {};
+      lines.forEach(l => {
+        const d = dealFor(l);
+        if (!d) return;
+        const id = l.merchandise.id;
+        totals[id] = (totals[id] || 0) + l.quantity;
+        const v = (byVariant[id] = byVariant[id] || { deal: d, lines: {} });
+        v.lines[l.id] = (v.lines[l.id] || 0) + l.quantity;
+      });
+      // First cart we see on this visit: just remember it, don't change anything.
+      if (prev === null) { prev = totals; write(prev); return; }
+
+      for (const id in byVariant) {
+        const now = totals[id], before = prev[id] || 0, info = byVariant[id];
+        if (now > before && wantsFree(now)) {
+          // Customer just reached 2 (paid): add the free one.
+          busy = true;
+          prev[id] = now + 1; write(prev);
+          notes[id] = info.deal.note; showNotes();
+          cart.addLine({ variantId: id, quantity: 1 });
+          setTimeout(() => { busy = false; settle(); }, 1500);
+          return;
+        }
+        if (now < before && wantsFree(now)) {
+          // Customer removed one from a deal set: drop the free item too.
+          busy = true;
+          const lineId = Object.keys(info.lines).reduce((a, b) => (info.lines[b] > info.lines[a] ? b : a));
+          prev[id] = now - 1; write(prev);
+          if (!wantsFree(now - 1) && (now - 1) < 3) delete notes[id];
+          showNotes();
+          cart.addCartAction({ action: 'updateCart', lines: [{ id: lineId, quantity: info.lines[lineId] - 1 }] });
+          setTimeout(() => { busy = false; settle(); }, 1500);
+          return;
+        }
+      }
+      // Clear notes for items that are no longer in a deal set.
+      Object.keys(notes).forEach(id => { if (!totals[id] || totals[id] < 3) delete notes[id]; });
+      showNotes();
+      prev = totals; write(prev);
+    };
+
+    cart.addEventListener('shopify:cartData', e => {
+      latest = e.detail;
+      clearTimeout(timer);
+      timer = setTimeout(settle, 600);
+    });
+  });
+})();
