@@ -317,6 +317,7 @@ const BOGO_REPEAT = false;
           busy = true;
           prev[id] = now + 1; write(prev);
           notes[id] = info.deal.note; showNotes();
+          if (window.tcfMetaSkip) window.tcfMetaSkip(id, 1); // not a shopper add-to-cart
           cart.addLine({ variantId: id, quantity: 1 });
           setTimeout(() => { busy = false; settle(); }, 1500);
           return;
@@ -344,5 +345,150 @@ const BOGO_REPEAT = false;
       clearTimeout(timer);
       timer = setTimeout(settle, 600);
     });
+  });
+})();
+
+// ===== Meta Pixel shopping events: ViewContent, AddToCart, InitiateCheckout =====
+// The pixel itself (and PageView) is added to every page by Netlify Snippet injection.
+// Purchase is NOT fired here: Shopify checkout already sends it, and a second one would double count.
+(function () {
+  // Product and variant IDs from the Shopify store, with prices.
+  const META_PRODUCTS = {
+    'tornado-crack-filler-acrylic-pavement-crack-sealant-1-gallon': { product: '10039016325406', variants: { '50698830414110': 69.99 } },
+    'tornado-crack-filler-professional-acrylic-pavement-crack-sealant-5-gallon-bucket': { product: '10039015768350', variants: { '50698828546334': 159.99 } },
+    'gator-nado-crack-filler-5-gallon-bucket': { product: '10117848858910', variants: { '51911065829662': 259.00 } },
+    'mix-master-concrete-repair-mortar': { product: '15842583642398', variants: { '59712301531422': 89.95, '59712301564190': 129.95, '59712301596958': 199.95 } }
+  };
+  // Must match the "Content ID" column in Facebook Commerce Manager > Catalog > Items.
+  // The Shopify Facebook & Instagram app normally uses shopify_US_<productId>_<variantId>.
+  const contentId = (productId, variantId) => 'shopify_US_' + productId + '_' + variantId;
+
+  const byVariant = {};
+  Object.keys(META_PRODUCTS).forEach(h => {
+    const p = META_PRODUCTS[h];
+    Object.keys(p.variants).forEach(v => { byVariant[v] = { product: p.product, price: p.variants[v] }; });
+  });
+  const numId = gid => String(gid || '').split('/').pop();
+  const money = n => Math.round(n * 100) / 100;
+  const track = (name, data, opts) => {
+    try { if (typeof window.fbq === 'function') window.fbq('track', name, data, opts || {}); } catch (e) {}
+  };
+  const newEventId = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+    : Date.now() + '-' + Math.random().toString(16).slice(2);
+
+  // --- ViewContent: once per product, when its buy area scrolls into view ---
+  const viewed = {};
+  const viewProduct = handle => {
+    const p = META_PRODUCTS[handle];
+    if (!p || viewed[handle]) return;
+    viewed[handle] = true;
+    const v = Object.keys(p.variants)[0];
+    track('ViewContent', { content_ids: [contentId(p.product, v)], content_type: 'product', value: p.variants[v], currency: 'USD' });
+  };
+  const contexts = document.querySelectorAll('shopify-context[type="product"][handle]');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      viewProduct(e.target.dataset.metaHandle);
+      io.unobserve(e.target);
+    }), { threshold: 0.4 });
+    contexts.forEach(c => {
+      const box = c.closest('.buy') || c.parentElement;
+      if (!box) return;
+      box.dataset.metaHandle = c.getAttribute('handle');
+      io.observe(box);
+    });
+  } else {
+    contexts.forEach(c => viewProduct(c.getAttribute('handle')));
+  }
+
+  if (!window.customElements) return;
+
+  // --- AddToCart: compare the cart before and after, so the exact variant and quantity are sent ---
+  let base = null, addRequested = 0, latestCart = null;
+  const skip = {}; // items the site adds by itself (the free Buy 2 Get 1 item) are not counted
+  window.tcfMetaSkip = (variantGid, qty) => { const id = numId(variantGid); skip[id] = (skip[id] || 0) + (qty || 1); };
+
+  const origAddToCart = window.addToCart;
+  window.addToCart = function () { addRequested = Date.now(); return origAddToCart.apply(this, arguments); };
+
+  const cartLines = c => (c && c.lines && c.lines.nodes) || [];
+
+  customElements.whenDefined('shopify-cart').then(() => {
+    const cart = document.getElementById('cart');
+    if (!cart) return;
+    cart.addEventListener('shopify:cartData', e => {
+      const c = e.detail;
+      if (!c) return;
+      latestCart = c;
+      const lines = cartLines(c);
+      if (lines.some(l => String(l.id).indexOf('__h_pending_') === 0)) return; // still saving
+      const now = {}, lineFor = {};
+      lines.forEach(l => {
+        const id = numId(l.merchandise && l.merchandise.id);
+        if (!id) return;
+        now[id] = (now[id] || 0) + l.quantity;
+        lineFor[id] = l;
+      });
+      if (base === null) {
+        // First cart seen on this page. If the shopper just clicked Add to Cart, the cart was empty before.
+        if (Date.now() - addRequested > 15000) { base = now; return; }
+        base = {};
+      }
+      Object.keys(now).forEach(id => {
+        let added = now[id] - (base[id] || 0);
+        if (added > 0 && skip[id]) { const s = Math.min(skip[id], added); skip[id] -= s; added -= s; }
+        if (added <= 0) return;
+        const info = byVariant[id];
+        const l = lineFor[id] || {};
+        const m = l.merchandise || {};
+        const productId = info ? info.product : numId(m.product && m.product.id);
+        const price = info ? info.price : parseFloat((m.price && m.price.amount) || 0);
+        track('AddToCart', {
+          content_ids: [contentId(productId, id)],
+          content_type: 'product',
+          value: money(price * added),
+          currency: 'USD',
+          num_items: added
+        }, { eventID: newEventId() });
+      });
+      base = now;
+    });
+
+    // --- InitiateCheckout: the Checkout button in the cart popup ---
+    document.addEventListener('click', e => {
+      const path = e.composedPath ? e.composedPath() : [];
+      if (path.indexOf(cart) === -1) return;
+      const a = path.find(n => n && n.tagName === 'A' && n.getAttribute('part') === 'primary-button' && n.href);
+      if (!a || a.dataset.metaSent) return;
+      const lines = cartLines(latestCart);
+      const ids = [], seen = {};
+      let qty = 0;
+      lines.forEach(l => {
+        const id = numId(l.merchandise && l.merchandise.id);
+        if (!id) return;
+        qty += l.quantity;
+        if (seen[id]) return;
+        seen[id] = true;
+        const info = byVariant[id];
+        ids.push(contentId(info ? info.product : numId(l.merchandise.product && l.merchandise.product.id), id));
+      });
+      const sub = latestCart && latestCart.cost && latestCart.cost.subtotalAmount;
+      track('InitiateCheckout', {
+        content_ids: ids,
+        content_type: 'product',
+        value: sub ? money(parseFloat(sub.amount)) : 0,
+        currency: 'USD',
+        num_items: (latestCart && latestCart.totalQuantity) || qty
+      });
+      a.dataset.metaSent = '1';
+      // Give the pixel a moment to send before the page leaves for Shopify checkout.
+      if (!a.target || a.target === '_self' || a.target === '_top') {
+        e.preventDefault();
+        setTimeout(() => { delete a.dataset.metaSent; window.location.href = a.href; }, 300);
+      } else {
+        setTimeout(() => { delete a.dataset.metaSent; }, 1000);
+      }
+    }, true);
   });
 })();
