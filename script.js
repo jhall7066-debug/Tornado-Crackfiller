@@ -604,6 +604,9 @@ const BOGO_REPEAT = false;
   import(LIB).then(lib => {
     const base = () => Object.assign({
       hasUserConsent: true, // no cookie banner on this site
+      analyticsAllowed: true,
+      marketingAllowed: true,
+      saleOfDataAllowed: true,
       shopId: SHOP_ID,
       currency: 'USD',
       acceptedLanguage: 'EN',
