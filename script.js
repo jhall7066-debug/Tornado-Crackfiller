@@ -360,8 +360,8 @@ const BOGO_REPEAT = false;
     'mix-master-concrete-repair-mortar': { product: '15842583642398', variants: { '59712301531422': 89.95, '59712301564190': 129.95, '59712301596958': 199.95 } }
   };
   // Must match the "Content ID" column in Facebook Commerce Manager > Catalog > Items.
-  // The Shopify Facebook & Instagram app normally uses shopify_US_<productId>_<variantId>.
-  const contentId = (productId, variantId) => 'shopify_US_' + productId + '_' + variantId;
+  // This catalog uses the bare Shopify variant ID (confirmed by the ad team, Oct 29, 2026).
+  const contentId = (productId, variantId) => String(variantId);
   window.TCF_PRODUCTS = META_PRODUCTS;
 
   const byVariant = {};
