@@ -362,6 +362,7 @@ const BOGO_REPEAT = false;
   // Must match the "Content ID" column in Facebook Commerce Manager > Catalog > Items.
   // The Shopify Facebook & Instagram app normally uses shopify_US_<productId>_<variantId>.
   const contentId = (productId, variantId) => 'shopify_US_' + productId + '_' + variantId;
+  window.TCF_PRODUCTS = META_PRODUCTS;
 
   const byVariant = {};
   Object.keys(META_PRODUCTS).forEach(h => {
@@ -451,6 +452,7 @@ const BOGO_REPEAT = false;
           currency: 'USD',
           num_items: added
         }, { eventID: newEventId() });
+        try { window.dispatchEvent(new CustomEvent('tcf:addtocart', { detail: { productId: productId, variantId: id, quantity: added, price: price, cartId: c.id } })); } catch (e) {}
       });
       base = now;
     });
@@ -552,4 +554,88 @@ const BOGO_REPEAT = false;
       }).catch(() => {}).then(() => { setTimeout(() => { sending = false; }, 3000); });
     });
   });
+})();
+
+
+// ===== Shopify Analytics (sessions, add-to-carts and conversion rate in Shopify admin) =====
+// The old Shopify theme sent these automatically. This custom site sends them with
+// Shopify's official tool (@shopify/hydrogen-react) through the Headless sales channel.
+(function () {
+  const SHOP_ID = 'gid://shopify/Shop/96917487902';
+  const STOREFRONT_ID = '413162'; // Shopify admin > Headless > storefront > Storefront ID
+  const LIB = 'https://cdn.jsdelivr.net/npm/@shopify/hydrogen-react@2025.7.0/+esm';
+  const NAMES = {
+    '10039016325406': 'Tornado Crackfiller 1 Gallon',
+    '10039015768350': 'Tornado Crackfiller 5 Gallon',
+    '10117848858910': 'Gator-Nado Crackfiller 4.75 Gallon',
+    '15842583642398': 'Mix Master Concrete Repair Mortar'
+  };
+  const VARIANT_NAMES = { '59712301531422': 'Small', '59712301564190': 'Medium', '59712301596958': 'Large' };
+
+  // Shopify's visitor cookies: _shopify_y (returning visitor, 1 year) and _shopify_s (session, 30 min).
+  const uuid = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+  const getCookie = n => { const m = document.cookie.match('(?:^|; )' + n + '=([^;]*)'); return m ? decodeURIComponent(m[1]) : ''; };
+  const setCookie = (n, v, secs) => { document.cookie = n + '=' + encodeURIComponent(v) + '; max-age=' + secs + '; path=/; SameSite=Lax; Secure'; };
+  const visitor = getCookie('_shopify_y') || uuid();
+  const session = getCookie('_shopify_s') || uuid();
+  setCookie('_shopify_y', visitor, 365 * 86400);
+  setCookie('_shopify_s', session, 30 * 60); // renewed on every page view
+
+  // What kind of page is this?
+  const contexts = document.querySelectorAll('shopify-context[type="product"][handle]');
+  const pdp = document.querySelector('.pdp-buy shopify-context[type="product"][handle]');
+  const path = window.location.pathname.replace(/\.html$/, '');
+  const pageType = pdp ? 'product' : (path === '/' || path === '/index') ? 'home' : 'page';
+  const products = window.TCF_PRODUCTS || {};
+
+  const productPayload = (productId, variantId, price, qty) => ({
+    productGid: 'gid://shopify/Product/' + productId,
+    variantGid: 'gid://shopify/ProductVariant/' + variantId,
+    name: NAMES[productId] || 'Product',
+    variantName: VARIANT_NAMES[variantId] || '',
+    brand: 'Tornado Crackfiller',
+    price: String(price),
+    quantity: qty || 1
+  });
+
+  if (STOREFRONT_ID.indexOf('PASTE') === 0) return; // not set up yet
+
+  import(LIB).then(lib => {
+    const base = () => Object.assign({
+      hasUserConsent: true, // no cookie banner on this site
+      shopId: SHOP_ID,
+      currency: 'USD',
+      acceptedLanguage: 'EN',
+      shopifySalesChannel: 'headless',
+      storefrontId: STOREFRONT_ID,
+      uniqueToken: visitor,
+      visitToken: session
+    }, lib.getClientBrowserParameters());
+    const send = (eventName, extra) => {
+      try { lib.sendShopifyAnalytics({ eventName: eventName, payload: Object.assign(base(), extra || {}) }).catch(() => {}); } catch (e) {}
+    };
+
+    // Page view on every page
+    const view = { pageType: pageType };
+    let pdpProduct = null;
+    if (pdp) {
+      const p = products[pdp.getAttribute('handle')];
+      if (p) {
+        const v = Object.keys(p.variants)[0];
+        pdpProduct = productPayload(p.product, v, p.variants[v], 1);
+        view.resourceId = pdpProduct.productGid;
+      }
+    }
+    send(lib.AnalyticsEventName.PAGE_VIEW_2, view);
+    if (pdpProduct) send(lib.AnalyticsEventName.PRODUCT_VIEW, { pageType: 'product', resourceId: pdpProduct.productGid, products: [pdpProduct], totalValue: parseFloat(pdpProduct.price) });
+
+    // Add to cart (announced by the Meta code above once the cart really changes)
+    window.addEventListener('tcf:addtocart', e => {
+      const d = e.detail || {};
+      const item = productPayload(d.productId, d.variantId, d.price, d.quantity);
+      setCookie('_shopify_s', session, 30 * 60);
+      send(lib.AnalyticsEventName.ADD_TO_CART, { pageType: pageType, cartId: d.cartId, products: [item], totalValue: Math.round(d.price * d.quantity * 100) / 100 });
+    });
+  }).catch(() => {});
 })();
