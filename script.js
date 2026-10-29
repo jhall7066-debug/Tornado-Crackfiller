@@ -469,7 +469,8 @@ const BOGO_REPEAT = false;
       lines.forEach(l => {
         const id = numId(l.merchandise && l.merchandise.id);
         if (!id) return;
-        qty += l.quantity;
+        const lineCost = l.cost && l.cost.totalAmount && parseFloat(l.cost.totalAmount.amount);
+        if (lineCost !== 0) qty += l.quantity; // the free Buy 2 Get 1 jug is not counted
         if (seen[id]) return;
         seen[id] = true;
         const info = byVariant[id];
@@ -481,7 +482,7 @@ const BOGO_REPEAT = false;
         content_type: 'product',
         value: sub ? money(parseFloat(sub.amount)) : 0,
         currency: 'USD',
-        num_items: (latestCart && latestCart.totalQuantity) || qty
+        num_items: qty
       });
       a.dataset.metaSent = '1';
       // Give the pixel a moment to send before the page leaves for Shopify checkout.
@@ -536,8 +537,11 @@ const BOGO_REPEAT = false;
       if (!c || !c.id || sending || isDone(c.id)) return;
       const have = {};
       (c.attributes || []).forEach(a => { have[a.key] = a.value; });
-      if (wanted.every(a => have[a.key] === a.value)) return;
-      // Keep any attributes already on the cart, add or replace ours.
+      const ours = TAGS.concat('landing_page');
+      const stale = ours.filter(k => k in have && !wanted.some(a => a.key === k));
+      if (!stale.length && wanted.every(a => have[a.key] === a.value)) return;
+      // Keep the cart's other attributes. Replace all ad tags with the newest visit's set.
+      stale.forEach(k => { delete have[k]; });
       wanted.forEach(a => { have[a.key] = a.value; });
       const attributes = Object.keys(have).map(k => ({ key: k, value: have[k] }));
       sending = true;
