@@ -492,3 +492,64 @@ const BOGO_REPEAT = false;
     }, true);
   });
 })();
+
+// ===== Ad tags on Shopify orders (UTMs + Facebook click ID) =====
+// When a visitor lands from an ad link (?utm_source=...&fbclid=...), remember those tags,
+// then save them on the Shopify cart so they show on the order under "Additional details".
+(function () {
+  const KEY = 'tcf-ad-tags';
+  const TAGS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
+  const API = SHOP_URL + '/api/2025-07/graphql.json';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } };
+  const save = v => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} };
+
+  // 1. On landing: keep the newest set of ad tags (they expire after 30 days).
+  let tags = load();
+  if (tags && Date.now() - (tags._t || 0) > 30 * 864e5) tags = null;
+  try {
+    const q = new URLSearchParams(window.location.search);
+    const found = {};
+    TAGS.forEach(k => { const v = q.get(k); if (v) found[k] = v.slice(0, 250); });
+    if (Object.keys(found).length) {
+      found.landing_page = window.location.pathname;
+      found._t = Date.now();
+      tags = found;
+      save(tags);
+    }
+  } catch (e) {}
+  if (!tags || !window.customElements) return;
+
+  // 2. When the cart exists: write the tags onto it once (skips if they are already there).
+  const wanted = Object.keys(tags).filter(k => k !== '_t').map(k => ({ key: k, value: String(tags[k]) }));
+  let sending = false;
+  const sig = JSON.stringify(wanted);
+  const doneKey = 'tcf-ad-tags-sent';
+  const isDone = id => { try { return sessionStorage.getItem(doneKey) === id + sig; } catch (e) { return false; } };
+  const markDone = id => { try { sessionStorage.setItem(doneKey, id + sig); } catch (e) {} };
+  customElements.whenDefined('shopify-cart').then(() => {
+    const cart = document.getElementById('cart');
+    if (!cart) return;
+    cart.addEventListener('shopify:cartData', e => {
+      const c = e.detail;
+      if (!c || !c.id || sending || isDone(c.id)) return;
+      const have = {};
+      (c.attributes || []).forEach(a => { have[a.key] = a.value; });
+      if (wanted.every(a => have[a.key] === a.value)) return;
+      // Keep any attributes already on the cart, add or replace ours.
+      wanted.forEach(a => { have[a.key] = a.value; });
+      const attributes = Object.keys(have).map(k => ({ key: k, value: have[k] }));
+      sending = true;
+      fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'mutation($id: ID!, $a: [AttributeInput!]!) { cartAttributesUpdate(cartId: $id, attributes: $a) { userErrors { message } } }',
+          variables: { id: c.id, a: attributes }
+        })
+      }).then(r => r.json()).then(r => {
+        const errs = r && r.data && r.data.cartAttributesUpdate && r.data.cartAttributesUpdate.userErrors;
+        if (r && r.data && (!errs || !errs.length)) markDone(c.id);
+      }).catch(() => {}).then(() => { setTimeout(() => { sending = false; }, 3000); });
+    });
+  });
+})();
